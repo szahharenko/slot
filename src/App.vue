@@ -46,5 +46,76 @@ a.btn {
     top:13px;
     box-shadow: 0px 4px 0px 0px #042e28;
   }
+  &.small {
+    height: 20px;
+    position: relative;
+    padding: 8px 20px;
+    font-size: inherit;
+    border-radius: 5px;
+    box-shadow: 0px 4px 0px 0px #042e28, 0px 0px 10px 0px #bbb;
+    &:active {
+      top:6px;
+      box-shadow: 0px 2px 0px 0px #042e28;
+    }
+  }
+  .coin {
+    margin-left: 0;
+  }
 }
+.current-balance {
+  color: goldenrod;
+  font-size: 120%;
+  font-weight: bold;
+}
+.coin {
+    width: 170px;
+    height: 170px;
+    display:inline-block;
+    position:relative;
+    overflow: hidden;
+    vertical-align: middle;
+    margin-right: 20px;
+  &::before {
+    content:'';
+    position: absolute;
+    top:0;
+    left:0;
+    height: 100%;
+    padding-left: 600%;
+    background-image:url(/img/coin-sprite.png);
+    background-size: 100% auto;
+    -webkit-animation: coin .6s steps(6) infinite;
+       -moz-animation: coin .6s steps(6) infinite;
+        -ms-animation: coin .6s steps(6) infinite;
+         -o-animation: coin .6s steps(6) infinite;
+            animation: coin .6s steps(6) infinite;
+  }
+  &.large {
+    width: 80px;
+    height: 80px;
+    margin-right: 10px;
+  }
+  &.medium {
+    width: 40px;
+    height: 40px;
+    margin-right: 5px;
+  }
+  &.small {
+    width: 20px;
+    height: 20px;
+    margin-right: 3px;
+  }
+  &.tiny {
+    width: 12px;
+    height: 12px;
+    vertical-align: baseline;
+    margin-right: 0;
+  }
+}
+@-webkit-keyframes coin {from {left: 0%;} to {left: -600%; }}
+@-moz-keyframes coin {from {left: 0%;} to {left: -600%; }}
+@-ms-keyframes coin {from {left: 0%;} to {left: -600%; }}
+@-o-keyframes coin {from {left: 0%;} to {left: -600%; }}
+@keyframes coin {from {left: 0%;} to {left: -600%; }}
+
 </style>

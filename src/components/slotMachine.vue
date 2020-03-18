@@ -1,8 +1,7 @@
 <template>
   <div>
     <div class="slot-machine">
-      {{this.props}}
-      <div class="slot" v-for="slot in this.allSlots"  ref='slots' v-bind:key="slot.id">
+      <div class="slot" v-for="slot in this.allSlots"  ref="slots" v-bind:key="slot.id">
         <div class="slot-viewport" v-bind:style="[slotViewport]">
           <div class="slot-row">
             <div class="slot-item" v-bind:style="[slotItem]" :class="{[opt] : true}" v-for="opt in slot.items" v-bind:key="opt.id"></div>
@@ -12,25 +11,53 @@
         </div>
       </div>
     </div>
-    <a class="btn" @click.prevent="start()">GO!</a>
+    <span v-if="this.currentBalance > 0">
+      <a class="btn" @click.prevent="start()">GO!</a>
+      <span class="current-balance">
+        <span class="coin medium"></span>
+        <animated-number
+          :round="1"
+          :value="this.currentBalance"
+          :duration="500"
+        />
+      </span>
+    </span>
+    <span v-else>
+      <a class="btn" @click.prevent="changeBallance(10,'buy button')">Buy 10 <span class="coin small"></span></a>
+    </span>
+    <div class="app-details">
+      <PayTable/>
+      <div>
+          <h3>Debug and log</h3>
+          <a class="btn small" @click.prevent="changeBallance(15,'add button')">Add 15 <span class="coin tiny"></span></a>
+          <br/><br/>
+          <h3>Balance changes</h3>
+          <div v-for="bc in this.balanceChanges" v-bind:key="bc.id">
+            <strong>{{bc.type}} :</strong>  <span class="coin tiny"></span> {{bc.changes}}
+          </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import AnimatedNumber from 'animated-number-vue'
+import PayTable from './payTable'
+
 const next = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame || function (cb) { window.setTimeout(cb, 1000 / 60) }
 const slotMachine = {
   data () {
     return {
       slotSize: 120,
-      baseDuration: 2000,
-      timeOffest: 1500,
+      baseDuration: 500,
+      timeOffest: 200,
       opts: null,
       startTime: null
     }
   },
   computed: {
-    ...mapGetters(['allSlots']),
+    ...mapGetters(['allSlots', 'payTables', 'currentBalance', 'balanceChanges']),
     slotViewport () {
       return {
         height: `${this.slotSize * 2}px`
@@ -44,12 +71,17 @@ const slotMachine = {
   },
   mounted () {
     this.$store.dispatch('fetchSlots')
+    this.$store.dispatch('fetcBalance')
   },
   methods: {
+    changeBallance (val, description = 'ballance change') {
+      this.$store.dispatch('changeBalance', { diff: val, type: description })
+    },
     start () {
-      if (this.opts) {
+      if (this.opts || this.currentBalance < 1) {
         return
       }
+      this.$store.dispatch('changeBalance', { diff: -1, type: 'press button' })
       this.opts = this.allSlots.map((data, i) => {
         const slotSize = this.slotSize
         const baseDuration = this.baseDuration
@@ -106,11 +138,26 @@ const slotMachine = {
 
 export default {
   name: 'slotMachine',
+  components: {
+    PayTable,
+    AnimatedNumber
+  },
   ...slotMachine
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.app-details {
+  margin: 5vmin auto;
+  text-align: left;
+  display: flex;
+  width: 80vmin;
+  max-width: 550px;
+  & > div {
+    flex: 1;
+    width: 50%;
+  }
+}
 .slot-machine {
   display: flex;
   width: 80vmin;
@@ -118,6 +165,12 @@ export default {
   overflow: hidden;
   position: relative;
   margin: 5vmin auto;
+  border: solid 6px #000000;
+  background: #000000;
+  border-radius: 9px;
+  border-right-width: 3px;
+  border-left-width: 3px;
+  box-shadow: 8px 8px 0px 0px #042e282e, 0px 0px 20px 0px #bbb;
 
   .slot {
     flex: 1;
@@ -167,4 +220,5 @@ export default {
     }
   }
 }
+.current-balance {margin: 0 20px;}
 </style>

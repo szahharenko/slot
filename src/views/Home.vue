@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <slotMachine slotSize="121" />
+    <slotMachine />
   </div>
 </template>
 
