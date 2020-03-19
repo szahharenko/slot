@@ -26,7 +26,8 @@
 <style lang="scss" scoped>
   .about {
     margin: 0 auto;
-    max-width: 80%;
+    width: 80%;
+    max-width: 550px;
     text-align: left;
   }
 </style>
