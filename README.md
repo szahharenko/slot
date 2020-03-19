@@ -1,24 +1,40 @@
-# slot
+# Slot Machine | Test assigment
 
-## Project setup
+# Data
+Reel and payout details are loaded as JSON, as a part of integration with backend.
+All data is stored using VUEX
+
+Reel data examle JSON
+```
+https://dev.code-essence.eu/json/slots/?fetch=paytable
+```
+
+Payout data examle JSON
+```
+https://dev.code-essence.eu/json/slots/?fetch=paytable
+```
+
+Balance data is simply VUEX storage instance
+
+# For fun
+- Some css animation
+- Some sprite animation
+- Vue routing for Notes page
+
+# Source code:
+- Code https://github.com/szahharenko/slot
+- Latest build https://slot.code-essence.eu/
+
+## Setup
 ```
 npm install
 ```
-
-### Compiles and hot-reloads for development
+### Run
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Build
 ```
 npm run build
 ```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
