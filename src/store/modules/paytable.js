@@ -3,7 +3,7 @@ export default {
   actions: {
     async fetchPayTable (context) {
       axios
-        .get('http://dev.code-essence.eu/json/slots/?fetch=paytable')
+        .get('https://dev.code-essence.eu/json/slots/?fetch=paytable')
         .then(response => {
           context.commit('updatePayTable', response.data)
         })

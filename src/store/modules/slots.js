@@ -3,7 +3,7 @@ export default {
   actions: {
     async fetchSlots (context) {
       axios
-        .get('http://dev.code-essence.eu/json/slots/')
+        .get('https://dev.code-essence.eu/json/slots/')
         .then(response => {
           context.commit('updateSlots', response.data)
         })
