@@ -29,10 +29,47 @@
       <PayTable/>
       <div>
           <h3>Debug and log</h3>
-          <a class="btn small" @click.prevent="changeBallance(15,'add button')">Add 15 <span class="coin tiny"></span></a>
+          <a class="btn small light" @click.prevent="changeBallance(10, 'add button')">Add 10 <span class="coin tiny"></span></a>
+          <a class="btn small light" @click.prevent="changeBallance(-10, 'add button')">Spent 10 <span class="coin tiny"></span></a>
           <br/><br/>
+          <h3>Custom result</h3>
+          <div class="debug">
+            <div>
+              <label>Column 1</label>
+              <select v-model="debug.slot[0]">
+                <option value="">symbol</option>
+                <option v-for="item in this.symobList" :value="[item]" v-bind:key="item">{{item}}</option>
+              </select>
+              <select v-model="debug.line[0]">
+                <option value="">line</option>
+                <option v-for="n in 3" :value="[n]" v-bind:key="n">{{n+10}}</option>
+              </select>
+            </div>
+            <div>
+              <label>Column 2</label>
+              <select v-model="debug.slot[1]">
+                <option value="">symbol</option>
+                <option v-for="item in this.symobList" :value="[item]" v-bind:key="item">{{item}}</option>
+              </select>
+              <select v-model="debug.line[1]" >
+                <option value="">line</option>
+                <option v-for="n in 3" :value="[n]" v-bind:key="n">{{n+20}}</option>
+              </select>
+            </div>
+            <div>
+              <label>Column 3</label>
+              <select v-model="debug.slot[2]">
+                <option value="">symbol</option>
+                <option v-for="item in this.symobList" :value="[item]" v-bind:key="item">{{item}}</option>
+              </select>
+              <select v-model="debug.line[2]">
+                <option value="">line</option>
+                <option v-for="n in 3" :value="[n]" v-bind:key="n+30">{{n}}</option>
+              </select>
+            </div>
+          </div>
           <h3>Balance changes</h3>
-          <div v-for="bc in this.balanceChanges" v-bind:key="bc.id">
+          <div v-for="bc in this.balanceRecords.records" v-bind:key="bc.id">
             <strong>{{bc.type}} :</strong>  <span class="coin tiny"></span> {{bc.changes}}
           </div>
       </div>
@@ -49,15 +86,23 @@ const next = window.requestAnimationFrame || window.webkitRequestAnimationFrame 
 const slotMachine = {
   data () {
     return {
+      debug: {
+        line: ['', '', ''],
+        slot: ['', '', '']
+      },
       slotSize: 120,
-      baseDuration: 500,
-      timeOffest: 200,
+      baseDuration: 1000,
+      timeOffest: 250,
       opts: null,
       startTime: null
     }
   },
   computed: {
-    ...mapGetters(['allSlots', 'payTables', 'currentBalance', 'balanceChanges']),
+    ...mapGetters(['allSlots', 'payTables', 'currentBalance', 'balanceRecords']),
+    symobList () {
+      const list = this.allSlots[0]
+      return list ? list.items : []
+    },
     slotViewport () {
       return {
         height: `${this.slotSize * 2}px`
@@ -87,24 +132,44 @@ const slotMachine = {
         const baseDuration = this.baseDuration
         const timeOffest = this.timeOffest
         const slot = this.$refs.slots[i]
-        const choice = Math.floor(Math.random() * data.items.length) // select spin middle symbol - get server side info
-        const halhLine = Math.random() >= 0.5 // if spin stops on half of line
+        let choice = Math.floor(Math.random() * data.items.length) // select spin middle symbol - get server side info
+        let halhLine = Math.random() >= 0.5 // if spin stops on half of line
+        // DEBUG output
+        const force = this.debug.slot[i]
+        const forceLine = this.debug.line[i] || 1
+        if (force) {
+          choice = data.items.indexOf(force[0])
+          switch (forceLine[0]) {
+            case 2:
+              halhLine = true
+              break
+            case 3:
+              halhLine = false
+              choice = choice - 1
+              break
+            default:
+              halhLine = false
+              break
+          }
+          if (choice < 0) choice = data.items.length - 1
+        }
         const opts = {
           id: i,
           el: slot.querySelector('.slot-row'),
-          finalPos: (choice * slotSize) + (halhLine ? slotSize / 2 : 0),
+          finalPos: (choice * slotSize) - (halhLine ? slotSize / 2 : 0) + (data.items.length * slotSize),
           startOffset: baseDuration + Math.random() * timeOffest + i * timeOffest,
           height: data.items.length * slotSize,
           duration: baseDuration + i * timeOffest, // milliseconds
+          items: data.items,
+          choice: choice,
           halhLine: halhLine,
           isFinished: false
         }
-        console.log(`choice: ${i}`, data.items[choice], 'opts:', opts)
         return opts
       })
       next(this.animate)
     },
-    animate: function (timestamp) {
+    animate (timestamp) {
       if (this.startTime == null) {
         this.startTime = timestamp
       }
@@ -121,17 +186,55 @@ const slotMachine = {
         const pos = -1 * Math.floor((offset + opt.finalPos) % opt.height)
         opt.el.style.transform = 'translateY(' + pos + 'px)'
         if (timeDiff > opt.duration) {
-          console.log('finished', opt, pos, opt.finalPost)
           opt.isFinished = true
         }
       })
       if (this.opts.every(o => o.isFinished)) {
+        this.checkPayTable(this.opts)
         this.opts = null
         this.startTime = null
-        console.log('finished')
       } else {
         next(this.animate)
       }
+    },
+    checkPayTable (opts) {
+      const payTotals = this.payTables.filter((v) => v.type === 'total') // payout only for total symbols
+      const payLines = this.payTables.filter((v) => v.type === 'line') // payout only for lines matches
+      // Creating result lines
+      const result = [[], [], []]
+      opts.forEach(opt => {
+        const a = opt.items[opt.choice]
+        const b = opt.items[opt.choice + 1] || opt.items[0]
+        // const c = opt.items[opt.choice - 1] || opt.items[opt.items.length - 1]
+        result[0].push(opt.halhLine ? false : a)
+        result[1].push(opt.halhLine ? a : false)
+        result[2].push(opt.halhLine ? false : b)
+      })
+      // Go throught results
+      result.forEach((resultLine, index) => {
+        const fullLine = resultLine.filter((v) => v !== false).length === 3
+        if (fullLine) {
+          payLines.forEach(payout => {
+            const matches = resultLine.filter((symbol) => payout.items.indexOf(symbol) !== -1) // filter only matching symbols
+            const reward = payout.reward || payout.lines[index].reward // total reward
+            const message = payout.count + ': ' + payout.items.join(',') // payout message
+            if (matches.length === 3) { // if all 3 match win condition
+              this.changeBallance(reward, message) // add coins
+              resultLine = resultLine.map(() => false) // cleanup not to score twice
+            }
+          })
+        }
+      })
+      // Checking total count rewards
+      const allSymbols = [...result[0], ...result[1], ...result[2]]
+      payTotals.forEach(payout => {
+        const matches = allSymbols.filter((symbol) => payout.items.indexOf(symbol) !== -1) // filter only matching symbols
+        const reward = payout.reward
+        const message = payout.count + ': ' + payout.items.join(',') // payout message
+        if (matches.length === 3) { // if all 3 match win condition
+          this.changeBallance(reward, message) // add coins
+        }
+      })
     }
   }
 }

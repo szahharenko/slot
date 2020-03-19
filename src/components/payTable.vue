@@ -2,25 +2,26 @@
   <div class="pay-table">
       <h3>Payouts</h3>
       <div class="payout">
-        <div class="reward" v-for="reward in this.payTables" v-bind:key="reward.id">
+        <div class="reward" v-for="reward in this.payTables" v-bind:key="reward.uid">
             <div v-if="reward.type == 'line'">
-                 <strong>{{reward.count}}</strong>
+                 <strong>{{reward.count}} x </strong>
                  <span class="icon" :class="[item]" v-for="item in reward.items" v-bind:key="item">
                      {{item}}
-                 </span> you get:
+                 </span>
                  <div v-if="reward.lines == 'any'">
-                    <span class="coin tiny"></span> {{reward.reward}} any line
+                    <span class="coin tiny"></span> {{reward.reward}} @ any line
                  </div>
                  <div v-else v-for="l in reward.lines" v-bind:key="l.line">
                      <span class="coin tiny"></span>  {{l.reward}} {{lineName(l.line)}} line
                  </div>
             </div>
             <div v-else>
-                <strong>{{reward.count}}</strong>
-                 <span class="icon" :class="[item]" v-for="item in reward.items" v-bind:key="item">
+                <strong>{{reward.count}} x </strong>
+                <span class="icon" :class="[item]" v-for="item in reward.items" v-bind:key="item.b">
                      {{item}}
-                 </span>
-                 anywhere you get <span class="coin tiny"></span>  {{reward.reward}}
+                </span>
+                anywhere
+                <span class="coin tiny"></span>  {{reward.reward}}
             </div>
         </div>
       </div>

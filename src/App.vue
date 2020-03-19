@@ -29,8 +29,9 @@
   }
 }
 
-a.btn {
+.btn {
   cursor: pointer;
+  white-space: nowrap;
   text-decoration: none;
   top:0;
   height: 40px;
@@ -58,10 +59,18 @@ a.btn {
       box-shadow: 0px 2px 0px 0px #042e28;
     }
   }
+  &.light {
+    background: #98c3be;
+    box-shadow: 0px 8px 0px 0px #709490, 0px 0px 20px 0px #bbb;
+  }
+  &.light.small {
+    box-shadow: 0px 4px 0px 0px #709490, 0px 0px 10px 0px #bbb;
+  }
   .coin {
     margin-left: 0;
   }
 }
+.btn + .btn {margin: 0 7px;}
 .current-balance {
   color: goldenrod;
   font-size: 120%;
