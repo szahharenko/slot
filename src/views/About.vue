@@ -9,7 +9,7 @@
     <ul>
       <li>Reel data examle <a target="_blank"  href="https://dev.code-essence.eu/json/slots/">JSON</a></li>
       <li>Payout data examle <a target="_blank" href="https://dev.code-essence.eu/json/slots/?fetch=paytable">JSON</a></li>
-      <li>Balance data is simpy VUEX storage instance</li>
+      <li>Balance data is simply VUEX storage instance</li>
     </ul>
     <h2>For fun</h2>
     <ul>
