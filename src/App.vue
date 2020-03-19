@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/">Play</router-link> |
+      <router-link to="/about">Notes</router-link>
     </div>
     <router-view/>
   </div>
@@ -22,7 +22,6 @@
   a {
     font-weight: bold;
     color: #2c3e50;
-
     &.router-link-exact-active {
       color: #08554b;
     }
@@ -51,7 +50,7 @@
     height: 20px;
     position: relative;
     padding: 8px 20px;
-    font-size: inherit;
+    font-size: 80%;
     border-radius: 5px;
     box-shadow: 0px 4px 0px 0px #042e28, 0px 0px 10px 0px #bbb;
     &:active {
@@ -61,6 +60,7 @@
   }
   &.light {
     background: #98c3be;
+    color: #042e28;
     box-shadow: 0px 8px 0px 0px #709490, 0px 0px 20px 0px #bbb;
   }
   &.light.small {

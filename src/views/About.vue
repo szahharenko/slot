@@ -1,5 +1,28 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <h1>Test assigment details</h1>
+    <p>This project developed using VUE.js</p>
+    <h2>Data</h2>
+    <p
+      >Reel and payout details are loaded as JSON, as a part of integration with backend.
+      <br/> All data is stored using <strong>VUEX</strong></p>
+    <ul>
+      <li>Reel data examle <a target="_blank"  href="http://dev.code-essence.eu/json/slots/">JSON</a></li>
+      <li>Payout data examle <a target="_blank" href="http://dev.code-essence.eu/json/slots/?fetch=paytable">JSON</a></li>
+      <li>Balance data is simpy VUEX storage instance</li>
+    </ul>
+    <h2>For fun</h2>
+    <ul>
+      <li>Some css animation</li>
+      <li>Some sprite animation</li>
+      <li>Vue routing for Notes page</li>
+    </ul>
   </div>
 </template>
+<style lang="scss" scoped>
+  .about {
+    margin: 0 auto;
+    max-width: 80%;
+    text-align: left;
+  }
+</style>

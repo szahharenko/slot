@@ -4,19 +4,19 @@
       <div class="payout">
         <div class="reward" v-for="reward in this.payTables" v-bind:key="reward.uid">
             <div v-if="reward.type == 'line'">
-                 <strong>{{reward.count}} x </strong>
+                 <strong>{{reward.count}} </strong>
                  <span class="icon" :class="[item]" v-for="item in reward.items" v-bind:key="item">
                      {{item}}
                  </span>
                  <div v-if="reward.lines == 'any'">
-                    <span class="coin tiny"></span> {{reward.reward}} @ any line
+                    <span class="coin tiny"></span> {{reward.reward}} any line
                  </div>
                  <div v-else v-for="l in reward.lines" v-bind:key="l.line">
                      <span class="coin tiny"></span>  {{l.reward}} {{lineName(l.line)}} line
                  </div>
             </div>
             <div v-else>
-                <strong>{{reward.count}} x </strong>
+                <strong>{{reward.count}} </strong>
                 <span class="icon" :class="[item]" v-for="item in reward.items" v-bind:key="item.b">
                      {{item}}
                 </span>
@@ -53,14 +53,17 @@ export default {
 <style lang="scss" scoped>
     .icon {
         display:inline-block;
-        width: 20px;
-        height: 20px;
+        width: 30px;
+        height: 30px;
         font-size: 0;
         position:relative;
         overflow: hidden;
         vertical-align: middle;
         background: center center no-repeat;
-        background-size: contain;
+        background-color: #98c3be;
+        border-radius: 100%;
+        background-size: 80%;
+        border: solid 2px #08554b82;
 
         &.bar {
             background-image: url('/img/bar.png');
