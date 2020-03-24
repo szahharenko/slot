@@ -1,4 +1,4 @@
-# Slot Machine | Test assigment
+# Slot Machine | Odnoruky
 
 # Data
 Reel and payout details are loaded as JSON, as a part of integration with backend.
