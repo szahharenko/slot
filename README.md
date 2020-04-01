@@ -23,7 +23,9 @@ Balance data is simply VUEX storage instance
 
 # Source code:
 - Code https://github.com/szahharenko/slot
-- Latest build https://slot.code-essence.eu/
+- Preview https://slot.code-essence.eu/
+- Build
+[![Netlify Status](https://api.netlify.com/api/v1/badges/8d9a9ee2-b6c3-4ade-afa1-f3490fab40da/deploy-status)](https://app.netlify.com/sites/slot-vuejs-dev/deploys)
 
 ## Setup
 ```
